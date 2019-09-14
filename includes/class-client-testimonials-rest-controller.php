@@ -68,33 +68,35 @@ class Client_Testimonials_REST_Controller extends WP_REST_Controller {
 	 * @return WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
-		$page     = $request->get_param( 'page' );
-		$per_page = $request->get_param( 'per_page' );
-		$order    = $request->get_param( 'order' );
-		$orderby  = $request->get_param( 'orderby' );
-
-		$args = [
-			'page'     => $page,
-			'per_page' => $per_page,
-		];
-
-		if ( $request->get_param( 'featured' ) ) {
-			$args['featured'] = true;
-		}
-
 		$testimonials_args = array(
-			'post_type'      => 'testimonials',
-			'post_status'    => 'publish',
-			'posts_per_page' => $per_page,
-			'orderby'        => $orderby,
-			'order'          => $order,
-			'paged'          => $page,
+			'posts_per_page' => $request->get_param( 'per_page' ),
+			'orderby'        => $request->get_param( 'orderby' ),
+			'order'          => $request->get_param( 'order' ),
+			'paged'          => $request->get_param( 'page' ),
 		);
 
-		$testimonials = get_posts( $testimonials_args );
-		$response     = [ 'items' => $this->prepare_portfolios_for_response( $testimonials, $request ) ];
+		$testimonials = Client_Testimonials_Helper::get_testimonials( $testimonials_args );
+		$response     = [
+			'items' => $this->prepare_items_for_response( $testimonials, $request )
+		];
 
 		return $this->respondOK( $response );
+	}
+
+	/**
+	 * @param WP_Post[] $testimonials
+	 *
+	 * @param WP_REST_Request $request
+	 *
+	 * @return array
+	 */
+	public function prepare_items_for_response( $testimonials, $request ) {
+		$items = [];
+		foreach ( $testimonials as $testimonial ) {
+			$items[] = $this->prepare_item_for_response( $testimonial, $request )->get_data();
+		}
+
+		return $items;
 	}
 
 	/**
@@ -148,8 +150,8 @@ class Client_Testimonials_REST_Controller extends WP_REST_Controller {
 			$data['client_name'] = ! empty( $meta['client_name'] ) ? $meta['client_name'] : '';
 		}
 
-		if ( in_array( 'client_business_name', $fields ) ) {
-			$data['client_business_name'] = ! empty( $meta['source'] ) ? $meta['source'] : '';
+		if ( in_array( 'client_company', $fields ) ) {
+			$data['client_company'] = ! empty( $meta['source'] ) ? $meta['source'] : '';
 		}
 
 		if ( in_array( 'client_website', $fields ) ) {
@@ -178,22 +180,6 @@ class Client_Testimonials_REST_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * @param WP_Post[] $portfolios
-	 *
-	 * @param WP_REST_Request $request
-	 *
-	 * @return array
-	 */
-	public function prepare_portfolios_for_response( array $portfolios, $request ) {
-		$items = [];
-		foreach ( $portfolios as $portfolio ) {
-			$items[] = $this->prepare_item_for_response( $portfolio, $request )->get_data();
-		}
-
-		return $items;
-	}
-
-	/**
 	 * Retrieves the query params for the collections.
 	 *
 	 * @return array Query parameters for the collection.
@@ -210,7 +196,7 @@ class Client_Testimonials_REST_Controller extends WP_REST_Controller {
 			'modified_gmt',
 			'link',
 			'client_name',
-			'client_business_name',
+			'client_company',
 			'client_website',
 			'featured_media'
 		];
@@ -237,7 +223,7 @@ class Client_Testimonials_REST_Controller extends WP_REST_Controller {
 					'id',
 					'content',
 					'client_name',
-					'client_business_name',
+					'client_company',
 					'client_website',
 					'featured_media'
 				],

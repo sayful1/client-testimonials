@@ -1,4 +1,7 @@
 <?php
+
+defined( 'ABSPATH' ) || exit;
+
 $args = array(
 	'posts_per_page' => intval( $posts_per_page ),
 	'orderby'        => $orderby,
@@ -11,7 +14,7 @@ $query = new WP_Query( $args );
 ?>
 <div
         id="client-testimonials"
-        class="owl-carousel client-testimonials"
+        class="owl-carousel client-testimonials client-testimonials--default"
         data-mobile="<?php echo intval( $mobile ); ?>"
         data-tablet="<?php echo intval( $tablet ); ?>"
         data-desktop="<?php echo intval( $desktop ); ?>"
@@ -31,23 +34,23 @@ $query = new WP_Query( $args );
 			$client_link   = ( empty( $testimonial['link'] ) ) ? '' : $testimonial['link'];
 
 			?>
-            <div class="single-feedback">
+            <div class="client-testimonial">
 				<?php if ( has_post_thumbnail() ): ?>
-                    <div class="client-pic">
+                    <div class="client-testimonial__avatar">
 						<?php the_post_thumbnail( array( 64, 64 ) ); ?>
                     </div>
 				<?php endif; ?>
-                <div class="box">
-                    <p class="message">
+                <div class="client-testimonial__content">
+                    <div class="client-testimonial__message">
 						<?php echo get_the_content(); ?>
-                    </p>
+                    </div>
                 </div>
-                <div class="client-info">
-                    <div class="client-name colored-text strong">
+                <div class="client-testimonial__client-info">
+                    <div class="client-testimonial__client-name">
 						<?php echo $client_name; ?>
                     </div>
-                    <div class="company">
-                        <a href="<?php echo $client_link; ?>" target="_blank">
+                    <div class="client-testimonial__client-company">
+                        <a href="<?php echo $client_link; ?>" rel="nofollow" target="_blank">
 							<?php echo $client_source; ?>
                         </a>
                     </div>

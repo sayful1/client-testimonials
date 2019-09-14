@@ -3,13 +3,15 @@
  * Plugin Name: 	Client Testimonials
  * Plugin URI: 		http://wordpress.org/plugins/client-testimonials/
  * Description: 	Manage and display client testimonials for your WordPress site.
- * Version: 		3.0.0
+ * Version: 		3.1.0
  * Author: 			Sayful Islam
  * Author URI: 		https://profiles.wordpress.org/sayful/
  * Text Domain: 	client-testimonials
  * License: 		GPLv2 or later
  * License URI:		http://www.gnu.org/licenses/gpl-2.0.txt
  */
+
+defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'Client_Testimonials' ) ) {
 
@@ -44,8 +46,11 @@ if ( ! class_exists( 'Client_Testimonials' ) ) {
 			return self::$_instance;
 		}
 
+		/**
+		 * Define plugin constants
+		 */
 		private function define_constants() {
-			define( 'CLIENT_TESTIMONIALS_VERSION', '3.0.0' );
+			define( 'CLIENT_TESTIMONIALS_VERSION', '3.1.0' );
 			define( 'CLIENT_TESTIMONIALS_FILE', __FILE__ );
 			define( 'CLIENT_TESTIMONIALS_PATH', dirname( CLIENT_TESTIMONIALS_FILE ) );
 			define( 'CLIENT_TESTIMONIALS_INCLUDES', CLIENT_TESTIMONIALS_PATH . '/includes' );
@@ -54,14 +59,21 @@ if ( ! class_exists( 'Client_Testimonials' ) ) {
 			define( 'CLIENT_TESTIMONIALS_ASSETS', CLIENT_TESTIMONIALS_URL . '/assets' );
 		}
 
+		/**
+		 * Include plugin files
+		 */
 		private function include_files() {
 			include_once CLIENT_TESTIMONIALS_INCLUDES . '/class-client-testimonials-post-type.php';
+			include_once CLIENT_TESTIMONIALS_INCLUDES . '/class-client-testimonials-helper.php';
 			include_once CLIENT_TESTIMONIALS_INCLUDES . '/class-client-testimonials-mce-button.php';
 			include_once CLIENT_TESTIMONIALS_INCLUDES . '/class-client-testimonials-shortcode.php';
 			include_once CLIENT_TESTIMONIALS_INCLUDES . '/class-client-testimonials-rest-controller.php';
 			include_once CLIENT_TESTIMONIALS_INCLUDES . '/widgets/widget-client-testimonials.php';
 		}
 
+		/**
+		 * Init plugin classes
+		 */
 		public function init_classes() {
 			Client_Testimonials_Post_Type::init();
 			Client_Testimonials_MCE_Button::init();
@@ -79,11 +91,11 @@ if ( ! class_exists( 'Client_Testimonials' ) ) {
 				return;
 			}
 
-			wp_enqueue_style( 'client-testimonials', CLIENT_TESTIMONIALS_ASSETS . '/css/style.css',
+			wp_enqueue_style( 'client-testimonials', CLIENT_TESTIMONIALS_ASSETS . '/css/frontend.css',
 				array(), CLIENT_TESTIMONIALS_VERSION, 'all' );
-			wp_enqueue_script( 'owl-carousel', CLIENT_TESTIMONIALS_ASSETS . '/js/owl.carousel.min.js',
+			wp_enqueue_script( 'owl-carousel', CLIENT_TESTIMONIALS_ASSETS . '/libs/owl.carousel.min.js',
 				array( 'jquery' ), '2.2.1', true );
-			wp_enqueue_script( 'client-testimonials', CLIENT_TESTIMONIALS_ASSETS . '/js/scripts.js',
+			wp_enqueue_script( 'client-testimonials', CLIENT_TESTIMONIALS_ASSETS . '/js/frontend.js',
 				array( 'jquery', 'owl-carousel' ), CLIENT_TESTIMONIALS_VERSION, true );
 		}
 

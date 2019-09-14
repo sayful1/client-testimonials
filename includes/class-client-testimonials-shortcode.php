@@ -1,5 +1,7 @@
 <?php
 
+defined( 'ABSPATH' ) || exit;
+
 if ( ! class_exists( 'Client_Testimonials_Shortcode' ) ) {
 
 	class Client_Testimonials_Shortcode {
@@ -17,30 +19,28 @@ if ( ! class_exists( 'Client_Testimonials_Shortcode' ) ) {
 		public static function init() {
 			if ( is_null( self::$_instance ) ) {
 				self::$_instance = new self();
+
+				add_shortcode( 'client-testimonials', array( self::$_instance, 'testimonials' ) );
 			}
 
 			return self::$_instance;
 		}
 
-		public function __construct() {
-			add_shortcode( 'client-testimonials', array( $this, 'testimonials' ) );
-		}
-
 		/**
 		 * A shortcode for rendering the client testimonials slide.
 		 *
-		 * @param array $atts Shortcode attributes.
+		 * @param array $attributes Shortcode attributes.
 		 * @param string $content The text content for shortcode. Not used.
 		 *
 		 * @return string  The shortcode output
 		 */
-		public function testimonials( $atts, $content = null ) {
+		public function testimonials( $attributes, $content = null ) {
 			$defaults = array(
 				'mobile'         => 1,
-				'tablet'         => 2,
-				'desktop'        => 3,
-				'widescreen'     => 4,
-				'fullhd'         => 5,
+				'tablet'         => 1,
+				'desktop'        => 1,
+				'widescreen'     => 1,
+				'fullhd'         => 1,
 				'loop'           => 'true',
 				'autoplay'       => 'true',
 				'nav'            => 'false',
@@ -48,15 +48,9 @@ if ( ! class_exists( 'Client_Testimonials_Shortcode' ) ) {
 				'orderby'        => 'none'
 			);
 
-			$atts['mobile']     = $this->_parse_atts( $atts, 'mobile', 'items_mobile', 1 );
-			$atts['tablet']     = $this->_parse_atts( $atts, 'tablet', 'items_tablet_small', 2 );
-			$atts['desktop']    = $this->_parse_atts( $atts, 'desktop', 'items_tablet', 3 );
-			$atts['widescreen'] = $this->_parse_atts( $atts, 'widescreen', 'items_desktop', 4 );
-			$atts['fullhd']     = $this->_parse_atts( $atts, 'fullhd', 'items_desktop', 4 );
+			$attributes = shortcode_atts( $defaults, $attributes, 'client-testimonials' );
 
-			$atts = wp_parse_args( $atts, $defaults );
-
-			extract( shortcode_atts( $defaults, $atts ) );
+			extract( $attributes );
 
 			ob_start();
 			require CLIENT_TESTIMONIALS_TEMPLATES . '/client-testimonials.php';
@@ -64,18 +58,6 @@ if ( ! class_exists( 'Client_Testimonials_Shortcode' ) ) {
 			ob_end_clean();
 
 			return apply_filters( 'client_testimonials', $html );
-		}
-
-		private function _parse_atts( $atts, $new_attr, $old_attr, $default = null ) {
-			if ( isset( $atts[ $new_attr ] ) ) {
-				return $atts[ $new_attr ];
-			}
-
-			if ( isset( $atts[ $old_attr ] ) ) {
-				return $atts[ $old_attr ];
-			}
-
-			return $default;
 		}
 	}
 }

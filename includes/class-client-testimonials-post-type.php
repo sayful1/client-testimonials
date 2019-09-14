@@ -1,4 +1,7 @@
 <?php
+
+defined( 'ABSPATH' ) || exit;
+
 if ( ! class_exists( 'Client_Testimonials_Post_Type' ) ) {
 
 	class Client_Testimonials_Post_Type {

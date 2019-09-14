@@ -1,4 +1,7 @@
 <?php
+
+defined( 'ABSPATH' ) || exit;
+
 if ( ! class_exists( 'Client_Testimonials_MCE_Button' ) ) {
 
 	class Client_Testimonials_MCE_Button {
@@ -52,7 +55,7 @@ if ( ! class_exists( 'Client_Testimonials_MCE_Button' ) ) {
 
 		// Declare script for new button
 		public function add_tinymce_plugin( $plugin_array ) {
-			$plugin_array['testimonials_mce_button'] = CLIENT_TESTIMONIALS_ASSETS . '/js/mce-button.js';
+			$plugin_array['testimonials_mce_button'] = CLIENT_TESTIMONIALS_ASSETS . '/js/admin.js';
 
 			return $plugin_array;
 		}
