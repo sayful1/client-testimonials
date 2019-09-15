@@ -26,72 +26,90 @@ class Client_Testimonials_Widget extends WP_Widget {
 		extract( $args );
 
 		$instance = wp_parse_args( $instance, array(
-			'title'          => '',
-			'mobile'         => 1,
-			'tablet'         => 2,
-			'desktop'        => 3,
-			'widescreen'     => 4,
-			'fullhd'         => 5,
-			'autoplay'       => 'true',
-			'nav'            => 'false',
-			'posts_per_page' => 20,
+			'title'      => '',
+			'mobile'     => 1,
+			'tablet'     => 1,
+			'desktop'    => 1,
+			'widescreen' => 1,
+			'fullhd'     => 1,
+			'loop'       => 'true',
+			'autoplay'   => 'true',
+			'nav'        => 'false',
+			'limit'      => 10,
 		) );
 
-		$title   = esc_attr( $instance['title'] );
-		$orderby = esc_attr( $instance['orderby'] );
+		$title = esc_attr( $instance['title'] );
 
 		$loop     = esc_attr( $instance['loop'] );
 		$autoplay = esc_attr( $instance['autoplay'] );
 		$nav      = esc_attr( $instance['nav'] );
 
-		$total      = absint( $instance['posts_per_page'] );
+		$total      = absint( $instance['limit'] );
 		$mobile     = absint( $instance['mobile'] );
 		$tablet     = absint( $instance['tablet'] );
 		$desktop    = absint( $instance['desktop'] );
 		$widescreen = absint( $instance['widescreen'] );
 		$fullhd     = absint( $instance['fullhd'] );
 
-		echo $before_widget;
+		echo $args['before_widget'];
 
 		if ( ! empty( $title ) ) {
-			echo $before_title . $title . $after_title;
+			echo $args['before_title'] . $title . $args['after_title'];
 		}
 
-		echo do_shortcode( '[client-testimonials fullhd="' . $fullhd . '" widescreen="' . $widescreen . '" desktop="' . $desktop . '" tablet="' . $tablet . '" mobile="' . $mobile . '" posts_per_page="' . $total . '" orderby="' . $orderby . '" loop="' . $loop . '" autoplay="' . $autoplay . '" nav="' . $nav . '"]' );
+		echo do_shortcode( '[client-testimonials fullhd="' . $fullhd . '" widescreen="' . $widescreen . '" desktop="' . $desktop . '" tablet="' . $tablet . '" mobile="' . $mobile . '" limit="' . $total . '" loop="' . $loop . '" autoplay="' . $autoplay . '" nav="' . $nav . '"]' );
 
-		echo $after_widget;
+		echo $args['after_widget'];
 	}
 
+	/**
+	 * Updates a particular instance of a widget.
+	 *
+	 * This function should check that `$new_instance` is set correctly. The newly-calculated
+	 * value of `$instance` should be returned. If false is returned, the instance won't be
+	 * saved/updated.
+	 *
+	 * @param array $new_instance New settings for this instance as input by the user via
+	 *                            WP_Widget::form().
+	 * @param array $old_instance Old settings for this instance.
+	 *
+	 * @return array Settings to save or bool false to cancel saving.
+	 */
 	public function update( $new_instance, $old_instance ) {
-		$instance                   = $old_instance;
-		$instance['title']          = esc_attr( $new_instance['title'] );
-		$instance['orderby']        = esc_attr( $new_instance['orderby'] );
-		$instance['loop']           = esc_attr( $new_instance['loop'] );
-		$instance['autoplay']       = esc_attr( $new_instance['autoplay'] );
-		$instance['nav']            = esc_attr( $new_instance['nav'] );
-		$instance['mobile']         = absint( $new_instance['mobile'] );
-		$instance['tablet']         = absint( $new_instance['tablet'] );
-		$instance['desktop']        = absint( $new_instance['desktop'] );
-		$instance['fullhd']         = absint( $new_instance['fullhd'] );
-		$instance['widescreen']     = absint( $new_instance['widescreen'] );
-		$instance['posts_per_page'] = intval( $new_instance['posts_per_page'] );
+		$instance               = $old_instance;
+		$instance['title']      = esc_attr( $new_instance['title'] );
+		$instance['loop']       = esc_attr( $new_instance['loop'] );
+		$instance['autoplay']   = esc_attr( $new_instance['autoplay'] );
+		$instance['nav']        = esc_attr( $new_instance['nav'] );
+		$instance['mobile']     = absint( $new_instance['mobile'] );
+		$instance['tablet']     = absint( $new_instance['tablet'] );
+		$instance['desktop']    = absint( $new_instance['desktop'] );
+		$instance['fullhd']     = absint( $new_instance['fullhd'] );
+		$instance['widescreen'] = absint( $new_instance['widescreen'] );
+		$instance['limit']      = intval( $new_instance['limit'] );
 
 		return $instance;
 	}
 
+	/**
+	 * Outputs the settings update form.
+	 *
+	 * @param array $instance Current settings.
+	 *
+	 * @return string Default return is 'noform'.
+	 */
 	public function form( $instance ) {
 		$instance = wp_parse_args( $instance, array(
-			'title'          => 'Client Testimonials',
-			'mobile'         => 1,
-			'tablet'         => 2,
-			'desktop'        => 3,
-			'widescreen'     => 4,
-			'fullhd'         => 5,
-			'loop'           => 'true',
-			'autoplay'       => 'true',
-			'nav'            => 'false',
-			'posts_per_page' => 20,
-			'orderby'        => 'none'
+			'title'      => 'Client Testimonials',
+			'mobile'     => 1,
+			'tablet'     => 2,
+			'desktop'    => 3,
+			'widescreen' => 4,
+			'fullhd'     => 5,
+			'loop'       => 'true',
+			'autoplay'   => 'true',
+			'nav'        => 'false',
+			'limit'      => 20,
 		) );
 
 		extract( $instance );
@@ -158,15 +176,15 @@ class Client_Testimonials_Widget extends WP_Widget {
                     value="<?php echo absint( $fullhd ); ?>"/>
         </p>
         <p>
-            <label for="<?php echo $this->get_field_id( 'posts_per_page' ); ?>">
+            <label for="<?php echo $this->get_field_id( 'limit' ); ?>">
                 Number of Testimonials:
             </label>
             <input
                     type="text"
                     class="widefat"
-                    id="<?php echo $this->get_field_id( 'posts_per_page' ); ?>"
-                    name="<?php echo $this->get_field_name( 'posts_per_page' ); ?>"
-                    value="<?php echo esc_attr( $posts_per_page ); ?>"/>
+                    id="<?php echo $this->get_field_id( 'limit' ); ?>"
+                    name="<?php echo $this->get_field_name( 'limit' ); ?>"
+                    value="<?php echo esc_attr( $limit ); ?>"/>
         </p>
         <p>
             <label for="<?php echo $this->get_field_id( 'loop' ); ?>">
@@ -205,22 +223,6 @@ class Client_Testimonials_Widget extends WP_Widget {
             >
                 <option value="true" <?php selected( $nav, 'true' ); ?>>On</option>
                 <option value="false" <?php selected( $nav, 'false' ); ?>>Off</option>
-            </select>
-        </p>
-        <p>
-            <label for="<?php echo $this->get_field_id( 'orderby' ); ?>">
-                Order By
-            </label>
-            <select
-                    class="widefat"
-                    id="<?php echo $this->get_field_id( 'orderby' ); ?>"
-                    name="<?php echo $this->get_field_name( 'orderby' ); ?>"
-            >
-                <option value="none" <?php selected( $orderby, 'none' ); ?>>None</option>
-                <option value="ID" <?php selected( $orderby, 'ID' ); ?>>ID</option>
-                <option value="date" <?php selected( $orderby, 'date' ); ?>>Date</option>
-                <option value="modified" <?php selected( $orderby, 'modified' ); ?>>Modified</option>
-                <option value="rand" <?php selected( $orderby, 'rand' ); ?>>Random</option>
             </select>
         </p>
 		<?php

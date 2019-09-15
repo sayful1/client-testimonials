@@ -35,14 +35,14 @@ if ( ! class_exists( 'Client_Testimonials_Shortcode' ) ) {
 		 */
 		public function testimonials( $attributes ) {
 			$defaults = array(
-				'mobile'     => 1,
 				'tablet'     => 1,
 				'desktop'    => 1,
 				'widescreen' => 1,
 				'fullhd'     => 1,
 				'autoplay'   => 'no',
+				'loop'       => 'yes',
 				'nav'        => 'yes',
-				'limit'      => 20,
+				'limit'      => 10,
 			);
 
 			$attributes = shortcode_atts( $defaults, $attributes, 'client-testimonials' );
@@ -58,21 +58,27 @@ if ( ! class_exists( 'Client_Testimonials_Shortcode' ) ) {
 		 * @return string
 		 */
 		public static function get_testimonial_items( array $attributes ) {
-			$items      = Client_Testimonial_Object::get_testimonials( [
+			$items = Client_Testimonial_Object::get_testimonials( [
 				'posts_per_page' => intval( $attributes['limit'] )
 			] );
-			$data       = [
+			$data  = [
 				"autoPlay"        => self::is_checked( $attributes['autoplay'] ),
 				"prevNextButtons" => self::is_checked( $attributes['nav'] ),
-				"adaptiveHeight"  => true,
+				"wrapAround"      => self::is_checked( $attributes['loop'] ),
 				"pageDots"        => false,
+				"cellAlign"       => 'left',
 			];
+
+			$tablet     = intval( $attributes['tablet'] );
+			$desktop    = intval( $attributes['desktop'] ) > $tablet ? intval( $attributes['desktop'] ) : $tablet;
+			$widescreen = intval( $attributes['widescreen'] ) > $desktop ? intval( $attributes['widescreen'] ) : $desktop;
+			$fullhd     = intval( $attributes['fullhd'] ) > $desktop ? intval( $attributes['fullhd'] ) : $widescreen;
 			$item_class = [
 				'testimonial-carousel-item',
-				'is-' . intval( $attributes['tablet'] ) . '-tablet',
-				'is-' . intval( $attributes['desktop'] ) . '-desktop',
-				'is-' . intval( $attributes['widescreen'] ) . '-widescreen',
-				'is-' . intval( $attributes['fullhd'] ) . '-fullhd',
+				'is-' . $tablet . '-tablet',
+				'is-' . $desktop . '-desktop',
+				'is-' . $widescreen . '-widescreen',
+				'is-' . $fullhd . '-fullhd',
 			];
 
 			$html = "<div class='client-testimonials client-testimonials--default' data-flickity='" . wp_json_encode( $data ) . "'>";

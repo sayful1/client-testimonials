@@ -1,6 +1,6 @@
 === Client Testimonials ===
 Contributors: 		sayful
-Tags:  				client testimonails, plugin, testimonials, Testimonials plugin, widget
+Tags:  				client-testimonials, testimonials, widget
 Requires at least: 	5.0
 Tested up to: 		5.2
 Stable tag: 		3.1.0
@@ -19,22 +19,21 @@ Testimonials is a WordPress plugin that allows you to manage and display testimo
 After installing and activating "Client Testimonials", go to `Admin Dashboard -> Testimonials` and create testimonials like creating a post.
 You can add "Client's Name", "Business/Site Name", "Business/Site Link" and "Featured Image" for client avatar
 
-After creating testimonials, go to post or page where you want add testimonials.
+After creating testimonials, go to post or page where you want add testimonials and write following shortcode.
+`[client-testimonials]`
 
-* On Wordpress editor, you will get a TinyMce button for testimonials.
-* Click on this button, a popup modal will be opened.
-* Fill all fields as your need and click ok button.
-* Save your page.
+The shortcode can include following shortcode attribute.
 
-= Input fields description =
-
-* *Items on mobile:* Write how many item you want to show at 320px or higher browser widths for mobile.
-* *Items on tablet:* Write how many item you want to show at 768px or higher browser widths for tablet.
-* *Items on small desktop:* Write how many item you want to show at 992px or higher browser widths for small desktop.
-* *Items on desktop:* Write how many item you want to show at 1192px or higher browser widths for desktop.
-* *Items on large desktop:* Write how many item you want to show at 1384px or higher browser widths for full HD desktop.
-* *Total numbers of Items to show:* Write how many testimonials you want to show. Write any number that your want to show.
-
+| Attribute     | Default   | Description                                                               |
+|---------------|-----------|---------------------------------------------------------------------------|
+| `tablet`      | `1`       | Number of items to show when screen size (greater than/equal to) 769px.   |
+| `desktop`     | `1`       | Number of items to show when screen size (greater than/equal to) 1024px.  |
+| `widescreen`  | `1`       | Number of items to show when screen size (greater than/equal to) 1200px.  |
+| `fullhd`      | `1`       | Number of items to show when screen size (greater than/equal to) 1400px.  |
+| `autoplay`    | `no`      | Value can be `yes` or `no`. Set `yes` to play slider automatically.       |
+| `loop`        | `yes`     | Value can be `yes` or `no`. Set `yes` to loop slider items.               |
+| `nav`         | `yes`     | Value can be `yes` or `no`. Set `yes` to show slider navigation.          |
+| `limit`       | `10`      | Maximum items can be show in a slider.                                    |
 
 = Widget Usage =
 
@@ -42,7 +41,7 @@ After creating testimonials, go to post or page where you want add testimonials.
 	<li>On Admin Dashboard, go to <strong>Appearance -> Widgets</strong></li>
 	<li>Find <strong>Client Testimonials</strong> and click on it.</li>
 	<li>Select at which widget area yor want to show it. and click <strong>Add Widget</strong></li>
-	<li>Give widget title and write number of testimonials you want to show and choose orderby and click <strong>Save</strong></li>
+	<li>Give widget title and write number of testimonials you want to show and click <strong>Save</strong></li>
 </ul>
 
 
@@ -83,6 +82,15 @@ Do you have questions or issues with Client Testimonials? [Ask for support here]
 6. Client Testimonials TinyMce button popup
 
 == Changelog ==
+
+= version 3.1.0 - 2019-09-15 =
+* Update core code.
+* Add testimonials REST endpoint.
+* Replace Owl carousel with Flickity carousel.
+* Update Client_Testimonials_REST_Controller class with response value.
+* Add Client_Testimonial_Object class for testimonials.
+* Update Client_Testimonials_Shortcode class.
+* Removed admin editor MCE button.
 
 = version 3.0.0 - 2017-06-17 =
 * Update core plugin
