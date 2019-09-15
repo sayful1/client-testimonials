@@ -5,7 +5,7 @@
  * Description: 	Manage and display client testimonials for your WordPress site.
  * Version: 		3.1.0
  * Author: 			Sayful Islam
- * Author URI: 		https://profiles.wordpress.org/sayful/
+ * Author URI: 		https://sayfulislam.com
  * Text Domain: 	client-testimonials
  * License: 		GPLv2 or later
  * License URI:		http://www.gnu.org/licenses/gpl-2.0.txt
@@ -20,7 +20,21 @@ if ( ! class_exists( 'Client_Testimonials' ) ) {
 		/**
 		 * The single instance of the class.
 		 */
-		protected static $_instance = null;
+		protected static $instance = null;
+
+		/**
+		 * Plugin slug
+		 *
+		 * @var string
+		 */
+		protected $plugin_name = 'client-testimonials';
+
+		/**
+		 * Plugin version
+		 *
+		 * @var string
+		 */
+		protected $version = '3.1.0';
 
 		/**
 		 * Main Client_Testimonials Instance.
@@ -29,21 +43,21 @@ if ( ! class_exists( 'Client_Testimonials' ) ) {
 		 * @return Client_Testimonials - Main instance.
 		 */
 		public static function instance() {
-			if ( is_null( self::$_instance ) ) {
-				self::$_instance = new self();
+			if ( is_null( self::$instance ) ) {
+				self::$instance = new self();
 
 				// define constants
-				self::$_instance->define_constants();
+				self::$instance->define_constants();
 
 				// include files
-				self::$_instance->include_files();
+				self::$instance->include_files();
 
-				add_action( 'plugin_loaded', [ self::$_instance, 'init_classes' ] );
+				add_action( 'plugin_loaded', [ self::$instance, 'init_classes' ] );
 
-				add_action( 'wp_enqueue_scripts', array( self::$_instance, 'enqueue_scripts' ) );
+				add_action( 'wp_enqueue_scripts', array( self::$instance, 'enqueue_scripts' ) );
 			}
 
-			return self::$_instance;
+			return self::$instance;
 		}
 
 		/**
@@ -64,11 +78,10 @@ if ( ! class_exists( 'Client_Testimonials' ) ) {
 		 */
 		private function include_files() {
 			include_once CLIENT_TESTIMONIALS_INCLUDES . '/class-client-testimonials-post-type.php';
-			include_once CLIENT_TESTIMONIALS_INCLUDES . '/class-client-testimonials-helper.php';
-			include_once CLIENT_TESTIMONIALS_INCLUDES . '/class-client-testimonials-mce-button.php';
+			include_once CLIENT_TESTIMONIALS_INCLUDES . '/class-client-testimonial-object.php';
 			include_once CLIENT_TESTIMONIALS_INCLUDES . '/class-client-testimonials-shortcode.php';
 			include_once CLIENT_TESTIMONIALS_INCLUDES . '/class-client-testimonials-rest-controller.php';
-			include_once CLIENT_TESTIMONIALS_INCLUDES . '/widgets/widget-client-testimonials.php';
+			include_once CLIENT_TESTIMONIALS_INCLUDES . '/class-client-testimonials-widget.php';
 		}
 
 		/**
@@ -76,7 +89,6 @@ if ( ! class_exists( 'Client_Testimonials' ) ) {
 		 */
 		public function init_classes() {
 			Client_Testimonials_Post_Type::init();
-			Client_Testimonials_MCE_Button::init();
 			Client_Testimonials_Shortcode::init();
 			Client_Testimonials_REST_Controller::init();
 
@@ -90,13 +102,11 @@ if ( ! class_exists( 'Client_Testimonials' ) ) {
 			if ( ! $this->should_load_scripts() ) {
 				return;
 			}
+			wp_enqueue_script( 'flickity', CLIENT_TESTIMONIALS_ASSETS . '/libs/flickity/flickity.pkgd.min.js',
+				array(), '2.2.1', true );
 
 			wp_enqueue_style( 'client-testimonials', CLIENT_TESTIMONIALS_ASSETS . '/css/frontend.css',
-				array(), CLIENT_TESTIMONIALS_VERSION, 'all' );
-			wp_enqueue_script( 'owl-carousel', CLIENT_TESTIMONIALS_ASSETS . '/libs/owl.carousel.min.js',
-				array( 'jquery' ), '2.2.1', true );
-			wp_enqueue_script( 'client-testimonials', CLIENT_TESTIMONIALS_ASSETS . '/js/frontend.js',
-				array( 'jquery', 'owl-carousel' ), CLIENT_TESTIMONIALS_VERSION, true );
+				array(), $this->get_version(), 'all' );
 		}
 
 		/**
@@ -109,6 +119,19 @@ if ( ! class_exists( 'Client_Testimonials' ) ) {
 			$load_scripts = is_active_widget( false, false, 'widget_client_testimonials', true ) || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'client-testimonials' ) );
 
 			return apply_filters( 'client_testimonials_load_scripts', $load_scripts );
+		}
+
+		/**
+		 * Get plugin version number
+		 *
+		 * @return string
+		 */
+		public function get_version() {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				return $this->version . '-' . time();
+			}
+
+			return $this->version;
 		}
 	}
 }

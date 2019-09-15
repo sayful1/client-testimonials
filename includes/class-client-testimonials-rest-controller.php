@@ -75,7 +75,7 @@ class Client_Testimonials_REST_Controller extends WP_REST_Controller {
 			'paged'          => $request->get_param( 'page' ),
 		);
 
-		$testimonials = Client_Testimonials_Helper::get_testimonials( $testimonials_args );
+		$testimonials = Client_Testimonial_Object::get_testimonials( $testimonials_args );
 		$response     = [
 			'items' => $this->prepare_items_for_response( $testimonials, $request )
 		];
@@ -84,8 +84,7 @@ class Client_Testimonials_REST_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * @param WP_Post[] $testimonials
-	 *
+	 * @param Client_Testimonial_Object[] $testimonials
 	 * @param WP_REST_Request $request
 	 *
 	 * @return array
@@ -102,13 +101,14 @@ class Client_Testimonials_REST_Controller extends WP_REST_Controller {
 	/**
 	 * Prepares a single post output for response.
 	 *
-	 * @param WP_Post $post Post object.
+	 * @param Client_Testimonial_Object $testimonial Post object.
 	 * @param WP_REST_Request $request Request object.
 	 *
 	 * @return WP_REST_Response Response object.
 	 */
-	public function prepare_item_for_response( $post, $request ) {
+	public function prepare_item_for_response( $testimonial, $request ) {
 		$fields = $request->get_param( 'fields' );
+		$post   = $testimonial->get_post();
 		$meta   = get_post_meta( $post->ID, '_testimonial', true );
 
 		// Base fields for every post.
@@ -147,28 +147,26 @@ class Client_Testimonials_REST_Controller extends WP_REST_Controller {
 		}
 
 		if ( in_array( 'client_name', $fields ) ) {
-			$data['client_name'] = ! empty( $meta['client_name'] ) ? $meta['client_name'] : '';
+			$data['client_name'] = $testimonial->get_client_name();
 		}
 
 		if ( in_array( 'client_company', $fields ) ) {
-			$data['client_company'] = ! empty( $meta['source'] ) ? $meta['source'] : '';
+			$data['client_company'] = $testimonial->get_client_company();
 		}
 
 		if ( in_array( 'client_website', $fields ) ) {
-			$project_url            = ! empty( $meta['link'] ) ? $meta['link'] : '';
-			$data['client_website'] = filter_var( $project_url, FILTER_VALIDATE_URL ) ? $project_url : '';
+			$data['client_website'] = $testimonial->get_client_website();
 		}
 
 		if ( in_array( 'featured_media', $fields ) ) {
 			$data['featured_media'] = [];
-			$thumbnail_id           = get_post_thumbnail_id( $post->ID );
-			$image_src              = wp_get_attachment_image_src( $thumbnail_id );
-			if ( isset( $image_src[0] ) && filter_var( $image_src[0], FILTER_VALIDATE_URL ) ) {
+			if ( $testimonial->has_avatar() ) {
+				$thumbnail_id           = get_post_thumbnail_id( $post->ID );
 				$data['featured_media'] = [
 					'id'       => intval( $thumbnail_id ),
 					'title'    => get_the_title( $thumbnail_id ),
 					'alt_text' => get_post_meta( $thumbnail_id, '_wp_attachment_image_alt', true ),
-					'src'      => $image_src[0],
+					'src'      => $testimonial->get_client_avatar_url(),
 				];
 			}
 		}
@@ -204,19 +202,19 @@ class Client_Testimonials_REST_Controller extends WP_REST_Controller {
 		$params = parent::get_collection_params();
 
 		return array_merge( $params, array(
-			'order'    => array(
+			'order'   => array(
 				'description' => __( 'Order sort attribute ascending or descending.' ),
 				'type'        => 'string',
 				'default'     => 'desc',
 				'enum'        => array( 'asc', 'desc' ),
 			),
-			'orderby'  => array(
+			'orderby' => array(
 				'description' => __( 'Sort collection by object attribute.' ),
 				'type'        => 'string',
 				'default'     => 'date',
 				'enum'        => array( 'id', 'title', 'date', ),
 			),
-			'fields'   => array(
+			'fields'  => array(
 				'description'       => __( 'List of fields to include in response. Available fields are ' ) . implode( ', ', $valid_fields ),
 				'type'              => 'array',
 				'default'           => [
@@ -227,12 +225,6 @@ class Client_Testimonials_REST_Controller extends WP_REST_Controller {
 					'client_website',
 					'featured_media'
 				],
-				'validate_callback' => 'rest_validate_request_arg',
-			),
-			'featured' => array(
-				'description'       => __( 'Limit results to featured projects only.' ),
-				'type'              => 'boolean',
-				'default'           => false,
 				'validate_callback' => 'rest_validate_request_arg',
 			),
 		) );

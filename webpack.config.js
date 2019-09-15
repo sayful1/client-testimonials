@@ -10,12 +10,8 @@ const config = require('./config.json');
 
 let plugins = [];
 let entryPoints = {
-	frontend: [
+    frontend: [
         "./assets/src/scss/frontend.scss",
-        "./assets/src/frontend/main.js",
-    ],
-    admin: [
-        "./assets/src/admin/main.js"
     ],
 };
 
@@ -60,7 +56,7 @@ module.exports = (env, argv) => {
                     test: /\.(sass|scss)$/,
                     use: [
                         {
-                            loader: isDev ? "vue-style-loader" : MiniCssExtractPlugin.loader
+                            loader: MiniCssExtractPlugin.loader, // isDev ? "vue-style-loader" : MiniCssExtractPlugin.loader
                         },
                         {
                             loader: "css-loader",

@@ -32,11 +32,9 @@ class Client_Testimonials_Widget extends WP_Widget {
 			'desktop'        => 3,
 			'widescreen'     => 4,
 			'fullhd'         => 5,
-			'loop'           => 'true',
 			'autoplay'       => 'true',
 			'nav'            => 'false',
 			'posts_per_page' => 20,
-			'orderby'        => 'none'
 		) );
 
 		$title   = esc_attr( $instance['title'] );
