@@ -81,10 +81,13 @@ if ( ! class_exists( 'Client_Testimonials_Shortcode' ) ) {
 				'is-' . $fullhd . '-fullhd',
 			];
 
-			$html = "<div class='client-testimonials client-testimonials--default' data-flickity='" . wp_json_encode( $data ) . "'>";
+			$themes = [ 'default', 'theme-two' ];
+
+			$html = "<div class='client-testimonials client-testimonials--theme-two' data-flickity='" . wp_json_encode( $data ) . "'>";
 			foreach ( $items as $item ) {
 				$html .= '<div class="' . implode( ' ', $item_class ) . '">';
-				$html .= self::get_testimonial_item( $item->get_post() );
+				// $html .= self::get_testimonial_item( $item->get_post() );
+				$html .= self::get_theme_two_testimonial_item( $item->get_post() );
 				$html .= '</div>';
 			}
 			$html .= '</div>';
@@ -121,6 +124,38 @@ if ( ! class_exists( 'Client_Testimonials_Shortcode' ) ) {
 							<?php echo $testimonial->get_client_company(); ?>
                         </a>
                     </div>
+                </div>
+            </div>
+			<?php
+			$html = ob_get_clean();
+
+			return apply_filters( 'client_testimonials_item', $html, $testimonial );
+		}
+
+		public static function get_theme_two_testimonial_item( $post ) {
+			$testimonial = new Client_Testimonial_Object( $post );
+			ob_start();
+			?>
+            <div class="testimonial-item">
+                <div class="testimonial-author">
+					<?php if ( $testimonial->has_avatar() ): ?>
+                        <div class="testimonial-avatar">
+                        <span class="testimonial-thumb">
+                            <?php echo $testimonial->get_client_avatar_image( array( 60, 60 ) ); ?>
+                        </span>
+                        </div>
+					<?php endif; ?>
+                    <div class="testimonial-vcard">
+                        <div class="testimonial-name">
+                            <span class="text-primary"><?php echo $testimonial->get_client_name() ?></span><br>
+                        </div>
+                        <div class="testimonial-position"><span class="text-secondary color-secondary">
+                                <?php echo $testimonial->get_client_company() ?>
+                            </span></div>
+                    </div>
+                </div>
+                <div class="testimonial-content">
+					<?php echo $testimonial->get_content() ?>
                 </div>
             </div>
 			<?php
