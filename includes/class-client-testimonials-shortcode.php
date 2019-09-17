@@ -42,6 +42,7 @@ if ( ! class_exists( 'Client_Testimonials_Shortcode' ) ) {
 				'autoplay'   => 'no',
 				'loop'       => 'yes',
 				'nav'        => 'yes',
+				'theme'      => 'one',
 				'limit'      => 10,
 			);
 
@@ -81,13 +82,21 @@ if ( ! class_exists( 'Client_Testimonials_Shortcode' ) ) {
 				'is-' . $fullhd . '-fullhd',
 			];
 
-			$themes = [ 'default', 'theme-two' ];
+			$themes = [ 'one', 'two' ];
+			$theme  = in_array( $attributes['theme'], $themes ) ? $attributes['theme'] : 'one';
 
-			$html = "<div class='client-testimonials client-testimonials--theme-two' data-flickity='" . wp_json_encode( $data ) . "'>";
+			$wrapper_classes   = [ 'client-testimonials' ];
+			$wrapper_classes[] = 'client-testimonials--theme-' . $theme;
+
+			$html = "<div class='" . implode( ' ', $wrapper_classes ) . "' data-flickity='" . wp_json_encode( $data ) . "'>";
 			foreach ( $items as $item ) {
-				$html .= '<div class="' . implode( ' ', $item_class ) . '">';
-				// $html .= self::get_testimonial_item( $item->get_post() );
-				$html .= self::get_theme_two_testimonial_item( $item->get_post() );
+				$item_class[] = 'testimonial-' . $item->get_post()->ID;
+				$html         .= '<div class="' . implode( ' ', $item_class ) . '">';
+				if ( 'two' == $theme ) {
+					$html .= self::get_theme_two_testimonial_item( $item->get_post() );
+				} else {
+					$html .= self::get_theme_one_testimonial_item( $item->get_post() );
+				}
 				$html .= '</div>';
 			}
 			$html .= '</div>';
@@ -100,22 +109,26 @@ if ( ! class_exists( 'Client_Testimonials_Shortcode' ) ) {
 		 *
 		 * @return string
 		 */
-		public static function get_testimonial_item( $post ) {
+		public static function get_theme_two_testimonial_item( $post ) {
 			$testimonial = new Client_Testimonial_Object( $post );
 			ob_start();
 			?>
             <div class="client-testimonial">
-				<?php if ( $testimonial->has_avatar() ): ?>
-                    <div class="client-testimonial__avatar">
-						<?php echo $testimonial->get_client_avatar_image( array( 64, 64 ) ); ?>
-                    </div>
-				<?php endif; ?>
                 <div class="client-testimonial__content">
                     <div class="client-testimonial__message">
 						<?php echo $testimonial->get_content(); ?>
                     </div>
                 </div>
                 <div class="client-testimonial__client-info">
+                    <div class="client-testimonial__avatar">
+						<?php if ( $testimonial->has_avatar() ): ?>
+							<?php echo $testimonial->get_client_avatar_image( array( 64, 64 ) ); ?>
+						<?php else: ?>
+                            <span class="client-testimonial__avatar-placeholder">
+                            <?php echo $testimonial->get_client_avatar_placeholder(); ?>
+                        </span>
+						<?php endif; ?>
+                    </div>
                     <div class="client-testimonial__client-name">
 						<?php echo $testimonial->get_client_name(); ?>
                     </div>
@@ -132,29 +145,36 @@ if ( ! class_exists( 'Client_Testimonials_Shortcode' ) ) {
 			return apply_filters( 'client_testimonials_item', $html, $testimonial );
 		}
 
-		public static function get_theme_two_testimonial_item( $post ) {
+		public static function get_theme_one_testimonial_item( $post ) {
 			$testimonial = new Client_Testimonial_Object( $post );
 			ob_start();
 			?>
-            <div class="testimonial-item">
-                <div class="testimonial-author">
-					<?php if ( $testimonial->has_avatar() ): ?>
-                        <div class="testimonial-avatar">
-                        <span class="testimonial-thumb">
-                            <?php echo $testimonial->get_client_avatar_image( array( 60, 60 ) ); ?>
-                        </span>
-                        </div>
-					<?php endif; ?>
-                    <div class="testimonial-vcard">
-                        <div class="testimonial-name">
+            <div class="client-testimonial">
+                <div class="client-testimonial__author">
+                    <div class="client-testimonial__avatar">
+						<?php if ( $testimonial->has_avatar() ): ?>
+                            <span class="client-testimonial__avatar-thumb">
+                                <?php echo $testimonial->get_client_avatar_image( array( 60, 60 ) ); ?>
+                            </span>
+						<?php else: ?>
+                            <span class="client-testimonial__avatar-placeholder">
+                                <?php echo $testimonial->get_client_avatar_placeholder(); ?>
+                            </span>
+						<?php endif; ?>
+                    </div>
+                    <div class="client-testimonial__vcard">
+                        <div class="client-testimonial__name">
                             <span class="text-primary"><?php echo $testimonial->get_client_name() ?></span><br>
                         </div>
-                        <div class="testimonial-position"><span class="text-secondary color-secondary">
-                                <?php echo $testimonial->get_client_company() ?>
-                            </span></div>
+                        <div class="client-testimonial__company">
+                            <a href="<?php echo $testimonial->get_client_website(); ?>" rel="nofollow"
+                               target="_blank" class="text-secondary color-secondary">
+								<?php echo $testimonial->get_client_company(); ?>
+                            </a>
+                        </div>
                     </div>
                 </div>
-                <div class="testimonial-content">
+                <div class="client-testimonial__content">
 					<?php echo $testimonial->get_content() ?>
                 </div>
             </div>
