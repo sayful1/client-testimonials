@@ -3,93 +3,40 @@
 	.client-testimonial {
 		background-color: #f7f7f7;
 		padding: 30px;
-		width: 100%;
 
 		&__author {
-			flex-flow: row wrap;
-			display: inline-flex;
-			align-items: center;
 			order: 1;
-			text-align: left;
-			max-width: 100%;
 		}
 
 		&__avatar {
-			border-radius: 500px;
-			padding: 0 20px 0 0;
-			max-width: 100%;
 		}
 
 		&__avatar-thumb,
 		&__avatar-placeholder {
-			max-width: 60px;
 		}
 
 		&__avatar-thumb {
-			display: block;
-			line-height: 0;
 
-			img {
-				border-radius: 500px;
-				max-width: 60px;
-				height: auto;
-			}
 		}
 
 		&__avatar-placeholder {
-			border: 1px solid rgba(51, 51, 51, 0.12);
-			border-radius: 500px;
-			display: block;
-			line-height: 0;
 
-			svg {
-				fill: rgba(51, 51, 51, 0.12);
-				transform: scale(.5);
-				max-width: 100%;
-				height: auto;
-			}
 		}
 
 		&__vcard {
-			display: inline-block;
-			flex-flow: column wrap;
-			margin-top: 0;
-			overflow: visible;
 		}
 
 		&__client-name {
-			margin-bottom: 0;
-			font-size: 16px;
-			line-height: 26px;
-			font-weight: bold;
-			text-transform: uppercase;
 
-			span {
-				margin-bottom: 0;
-				font-size: 16px;
-				line-height: 26px;
-				font-weight: bold;
-				text-transform: uppercase;
-			}
 		}
 
 		&__client-company {
-			margin-bottom: 0;
-			font-size: 14px;
-			line-height: 24px;
-			font-weight: bold;
 
-			span, a {
-				margin-bottom: 0;
-				font-size: 14px;
-				line-height: 24px;
-				font-weight: bold;
-			}
 		}
 
 		&__content {
 			flex: 1 0 auto;
-			margin-bottom: 10px;
+			margin-bottom: 30px;
 			order: 0;
 			max-width: 100%;
 		}
