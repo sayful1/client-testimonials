@@ -1,0 +1,11 @@
+.client-testimonials {
+	margin: 1rem 0;
+
+	.client-testimonial {
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+		flex-wrap: nowrap;
+		position: relative;
+	}
+}

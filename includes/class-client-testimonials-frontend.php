@@ -2,9 +2,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Client_Testimonials_Shortcode' ) ) {
+if ( ! class_exists( 'Client_Testimonials_Frontend' ) ) {
 
-	class Client_Testimonials_Shortcode {
+	class Client_Testimonials_Frontend {
 
 		/**
 		 * The single instance of the class.
@@ -14,7 +14,7 @@ if ( ! class_exists( 'Client_Testimonials_Shortcode' ) ) {
 		/**
 		 * Ensures only one instance of Client_Testimonials_Shortcode is loaded.
 		 *
-		 * @return Client_Testimonials_Shortcode - Main instance.
+		 * @return Client_Testimonials_Frontend - Main instance.
 		 */
 		public static function init() {
 			if ( is_null( self::$_instance ) ) {
@@ -92,12 +92,8 @@ if ( ! class_exists( 'Client_Testimonials_Shortcode' ) ) {
 			foreach ( $items as $item ) {
 				$item_class[] = 'testimonial-' . $item->get_post()->ID;
 				$html         .= '<div class="' . implode( ' ', $item_class ) . '">';
-				if ( 'two' == $theme ) {
-					$html .= self::get_theme_two_testimonial_item( $item->get_post() );
-				} else {
-					$html .= self::get_theme_one_testimonial_item( $item->get_post() );
-				}
-				$html .= '</div>';
+				$html         .= self::get_testimonial_item( $item->get_post() );
+				$html         .= '</div>';
 			}
 			$html .= '</div>';
 
@@ -105,47 +101,13 @@ if ( ! class_exists( 'Client_Testimonials_Shortcode' ) ) {
 		}
 
 		/**
+		 * Get testimonial item html
+		 *
 		 * @param WP_Post $post
 		 *
 		 * @return string
 		 */
-		public static function get_theme_two_testimonial_item( $post ) {
-			$testimonial = new Client_Testimonial_Object( $post );
-			ob_start();
-			?>
-            <div class="client-testimonial">
-                <div class="client-testimonial__content">
-                    <div class="client-testimonial__message">
-						<?php echo $testimonial->get_content(); ?>
-                    </div>
-                </div>
-                <div class="client-testimonial__client-info">
-                    <div class="client-testimonial__avatar">
-						<?php if ( $testimonial->has_avatar() ): ?>
-							<?php echo $testimonial->get_client_avatar_image( array( 64, 64 ) ); ?>
-						<?php else: ?>
-                            <span class="client-testimonial__avatar-placeholder">
-                            <?php echo $testimonial->get_client_avatar_placeholder(); ?>
-                        </span>
-						<?php endif; ?>
-                    </div>
-                    <div class="client-testimonial__client-name">
-						<?php echo $testimonial->get_client_name(); ?>
-                    </div>
-                    <div class="client-testimonial__client-company">
-                        <a href="<?php echo $testimonial->get_client_website(); ?>" rel="nofollow" target="_blank">
-							<?php echo $testimonial->get_client_company(); ?>
-                        </a>
-                    </div>
-                </div>
-            </div>
-			<?php
-			$html = ob_get_clean();
-
-			return apply_filters( 'client_testimonials_item', $html, $testimonial );
-		}
-
-		public static function get_theme_one_testimonial_item( $post ) {
+		public static function get_testimonial_item( $post ) {
 			$testimonial = new Client_Testimonial_Object( $post );
 			ob_start();
 			?>
@@ -163,10 +125,10 @@ if ( ! class_exists( 'Client_Testimonials_Shortcode' ) ) {
 						<?php endif; ?>
                     </div>
                     <div class="client-testimonial__vcard">
-                        <div class="client-testimonial__name">
+                        <div class="client-testimonial__client-name">
                             <span class="text-primary"><?php echo $testimonial->get_client_name() ?></span><br>
                         </div>
-                        <div class="client-testimonial__company">
+                        <div class="client-testimonial__client-company">
                             <a href="<?php echo $testimonial->get_client_website(); ?>" rel="nofollow"
                                target="_blank" class="text-secondary color-secondary">
 								<?php echo $testimonial->get_client_company(); ?>
@@ -175,7 +137,9 @@ if ( ! class_exists( 'Client_Testimonials_Shortcode' ) ) {
                     </div>
                 </div>
                 <div class="client-testimonial__content">
-					<?php echo $testimonial->get_content() ?>
+                    <div class="client-testimonial__message">
+						<?php echo $testimonial->get_content() ?>
+                    </div>
                 </div>
             </div>
 			<?php

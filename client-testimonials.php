@@ -79,7 +79,7 @@ if ( ! class_exists( 'Client_Testimonials' ) ) {
 		private function include_files() {
 			include_once CLIENT_TESTIMONIALS_INCLUDES . '/class-client-testimonials-post-type.php';
 			include_once CLIENT_TESTIMONIALS_INCLUDES . '/class-client-testimonial-object.php';
-			include_once CLIENT_TESTIMONIALS_INCLUDES . '/class-client-testimonials-shortcode.php';
+			include_once CLIENT_TESTIMONIALS_INCLUDES . '/class-client-testimonials-frontend.php';
 			include_once CLIENT_TESTIMONIALS_INCLUDES . '/class-client-testimonials-rest-controller.php';
 			include_once CLIENT_TESTIMONIALS_INCLUDES . '/class-client-testimonials-widget.php';
 		}
@@ -89,7 +89,7 @@ if ( ! class_exists( 'Client_Testimonials' ) ) {
 		 */
 		public function init_classes() {
 			Client_Testimonials_Post_Type::init();
-			Client_Testimonials_Shortcode::init();
+			Client_Testimonials_Frontend::init();
 			Client_Testimonials_REST_Controller::init();
 
 			add_action( 'widgets_init', array( 'Client_Testimonials_Widget', 'register' ) );
