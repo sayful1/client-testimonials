@@ -25,22 +25,20 @@ After creating testimonials, go to post or page where you want add testimonials 
 
 The shortcode can include following shortcode attribute.
 
-| Attribute     | Default   | Description                                                               |
-|---------------|-----------|---------------------------------------------------------------------------|
-| `theme`       | `one`     | Value can be `one` and `two`.                                             |
-| `tablet`      | `1`       | Number of items to show when screen size (greater than/equal to) 769px.   |
-| `desktop`     | `1`       | Number of items to show when screen size (greater than/equal to) 1024px.  |
-| `widescreen`  | `1`       | Number of items to show when screen size (greater than/equal to) 1200px.  |
-| `fullhd`      | `1`       | Number of items to show when screen size (greater than/equal to) 1400px.  |
-| `autoplay`    | `no`      | Value can be `yes` or `no`. Set `yes` to play slider automatically.       |
-| `loop`        | `yes`     | Value can be `yes` or `no`. Set `yes` to loop slider items.               |
-| `nav`         | `yes`     | Value can be `yes` or `no`. Set `yes` to show slider navigation.          |
-| `limit`       | `10`      | Maximum items can be show in a slider.                                    |
+* `theme`: Default value `one`. Value can be `one` and `two`.
+* `tablet`: Default value `1`. Number of items to show when screen size (greater than/equal to) 769px.
+* `desktop`: Default value `1`. Number of items to show when screen size (greater than/equal to) 1024px.
+* `widescreen`: Default value `1`. Number of items to show when screen size (greater than/equal to) 1200px.
+* `fullhd`: Default value `1`. Number of items to show when screen size (greater than/equal to) 1400px.
+* `autoplay`: Default value `no`. Value can be `yes` or `no`. Set `yes` to play slider automatically.
+* `loop`: Default value `yes`. Value can be `yes` or `no`. Set `yes` to loop slider items.
+* `nav`: Default value `yes`. Value can be `yes` or `no`. Set `yes` to show slider navigation.
+* `limit`: Default value `10`. Maximum items can be show in a slider.
 
 * Attribute `tablet`, `desktop`, `widescreen` and `fullhd` can take maximum value 5.
 
 Example 1:
-`[client-testimonials theme='two' autoplay='yes' tablet='2' desktop='3']`
+```[client-testimonials theme='two' autoplay='yes' tablet='2' desktop='3']```
 
 
 = Widget Usage =
