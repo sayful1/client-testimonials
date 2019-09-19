@@ -89,19 +89,17 @@ if ( ! class_exists( 'Client_Testimonials_Post_Type' ) ) {
 		 *
 		 * This functions is attached to the 'manage_edit-testimonials_columns' filter hook.
 		 *
-		 * @param array $columns
-		 *
 		 * @return array
 		 */
-		public function columns_title( $columns ) {
+		public function columns_title() {
 			$columns = array(
 				'cb'          => '<input type="checkbox">',
-				'title'       => 'Title',
-				'testimonial' => 'Testimonial',
-				'client-name' => 'Client Name',
-				'source'      => 'Business/Site',
-				'link'        => 'Link',
-				'avatar'      => 'Client Avatar'
+				'title'       => __( 'Title', 'client-testimonials' ),
+				'testimonial' => __( 'Testimonial', 'client-testimonials' ),
+				'client-name' => __( 'Client Name', 'client-testimonials' ),
+				'source'      => __( 'Client Company', 'client-testimonials' ),
+				'link'        => __( 'Client Website', 'client-testimonials' ),
+				'avatar'      => __( 'Client Avatar', 'client-testimonials' ),
 			);
 
 			return $columns;
@@ -152,36 +150,57 @@ if ( ! class_exists( 'Client_Testimonials_Post_Type' ) ) {
 		 */
 		public function post_type() {
 			$labels = array(
-				'name'               => 'Testimonials',
-				'singular_name'      => 'Testimonial',
-				'add_new'            => 'Add New',
-				'add_new_item'       => 'Add New Testimonial',
-				'edit_item'          => 'Edit Testimonial',
-				'new_item'           => 'New Testimonial',
-				'view_item'          => 'View Testimonial',
-				'search_items'       => 'Search Testimonials',
-				'not_found'          => 'No Testimonials found',
-				'not_found_in_trash' => 'No Testimonials in the trash',
-				'parent_item_colon'  => '',
+				'name'                  => _x( 'Testimonials', 'Post Type General Name', 'client-testimonials' ),
+				'singular_name'         => _x( 'Testimonial', 'Post Type Singular Name', 'client-testimonials' ),
+				'menu_name'             => __( 'Testimonials', 'client-testimonials' ),
+				'name_admin_bar'        => __( 'Testimonial', 'client-testimonials' ),
+				'archives'              => __( 'Testimonial Archives', 'client-testimonials' ),
+				'attributes'            => __( 'Testimonial Attributes', 'client-testimonials' ),
+				'parent_item_colon'     => __( 'Parent testimonial:', 'client-testimonials' ),
+				'all_items'             => __( 'All testimonials', 'client-testimonials' ),
+				'add_new_item'          => __( 'Add New Testimonial', 'client-testimonials' ),
+				'add_new'               => __( 'Add New', 'client-testimonials' ),
+				'new_item'              => __( 'New Testimonial', 'client-testimonials' ),
+				'edit_item'             => __( 'Edit Testimonial', 'client-testimonials' ),
+				'update_item'           => __( 'Update Testimonial', 'client-testimonials' ),
+				'view_item'             => __( 'View Testimonial', 'client-testimonials' ),
+				'view_items'            => __( 'View Testimonials', 'client-testimonials' ),
+				'search_items'          => __( 'Search Testimonial', 'client-testimonials' ),
+				'not_found'             => __( 'Not found', 'client-testimonials' ),
+				'not_found_in_trash'    => __( 'Not found in Trash', 'client-testimonials' ),
+				'featured_image'        => __( 'Client Avatar', 'client-testimonials' ),
+				'set_featured_image'    => __( 'Set client avatar image', 'client-testimonials' ),
+				'remove_featured_image' => __( 'Remove client avatar image', 'client-testimonials' ),
+				'use_featured_image'    => __( 'Use as client avatar image', 'client-testimonials' ),
+				'insert_into_item'      => __( 'Insert into testimonial', 'client-testimonials' ),
+				'uploaded_to_this_item' => __( 'Uploaded to this testimonial', 'client-testimonials' ),
+				'items_list'            => __( 'Testimonials list', 'client-testimonials' ),
+				'items_list_navigation' => __( 'Testimonials list navigation', 'client-testimonials' ),
+				'filter_items_list'     => __( 'Filter testimonials list', 'client-testimonials' ),
 			);
-
-			register_post_type( 'testimonials', array(
+			$args   = array(
+				'label'                => __( 'Testimonial', 'client-testimonials' ),
+				'description'          => __( 'Post Type Description', 'client-testimonials' ),
 				'labels'               => $labels,
-				'public'               => false,
-				'publicly_queryable'   => false,
-				'show_ui'              => true,
-				'exclude_from_search'  => true,
-				'query_var'            => true,
-				'rewrite'              => false,
-				'has_archive'          => false,
+				'supports'             => array( 'editor', 'thumbnail' ),
 				'hierarchical'         => false,
-				'show_in_rest'         => true,
-				'capability_type'      => 'page',
+				'public'               => true,
+				'show_ui'              => true,
+				'show_in_menu'         => true,
 				'menu_position'        => 10,
 				'menu_icon'            => 'dashicons-testimonial',
-				'supports'             => array( 'editor', 'thumbnail' ),
+				'show_in_admin_bar'    => true,
+				'show_in_nav_menus'    => false,
+				'can_export'           => false,
+				'has_archive'          => false,
+				'exclude_from_search'  => true,
+				'publicly_queryable'   => false,
+				'rewrite'              => false,
+				'capability_type'      => 'page',
+				'show_in_rest'         => true,
 				'register_meta_box_cb' => array( $this, 'add_meta_box' ),
-			) );
+			);
+			register_post_type( 'testimonials', $args );
 
 		}
 
@@ -191,10 +210,10 @@ if ( ! class_exists( 'Client_Testimonials_Post_Type' ) ) {
 		public function add_meta_box() {
 			add_meta_box(
 				'testimonials_form',
-				'Testimonial Details',
+				__( 'Testimonial Details', 'client-testimonials' ),
 				array( $this, 'meta_box_cb' ),
 				'testimonials',
-				'normal',
+				'side',
 				'high'
 			);
 		}
@@ -211,43 +230,35 @@ if ( ! class_exists( 'Client_Testimonials_Post_Type' ) ) {
 
 			wp_nonce_field( 'testimonials', 'testimonials' );
 			?>
-            <table class="form-table">
-                <tr valign="top">
-                    <th scope="row">
-                        <label for="client_name">
-							<?php esc_html_e( 'Client\'s Name (optional)', 'shapla' ) ?>
-                        </label>
-                    </th>
-                    <td>
-                        <input type="text" class="widefat" id="client_name" name="testimonial[client_name]"
-                               value="<?php echo esc_attr( $client_name ); ?>">
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row">
-                        <label for="source">
-							<?php esc_html_e( 'Business/Site Name (optional)', 'shapla' ) ?>
-                        </label>
-                    </th>
-                    <td>
-                        <input type="text" class="widefat" id="source" name="testimonial[source]"
-                               value="<?php echo esc_attr( $source ); ?>">
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row">
-                        <label for="link">
-							<?php esc_html_e( 'Business/Site Link (optional)', 'shapla' ) ?>
-                        </label>
-                    </th>
-                    <td>
-                        <input type="text" class="widefat" id="link" name="testimonial[link]"
-                               value="<?php echo esc_attr( $link ); ?>">
-                    </td>
-                </tr>
-            </table>
+            <style type="text/css">
+                .form-table--row {
+                    margin-bottom: 10px
+                }
+            </style>
+            <div class="form-table">
+                <div class="form-table--row">
+                    <label for="client_name">
+                        <strong><?php esc_html_e( 'Client Name', 'client-testimonials' ) ?></strong>
+                    </label>
+                    <input type="text" class="widefat" id="client_name" name="testimonial[client_name]"
+                           value="<?php echo esc_attr( $client_name ); ?>">
+                </div>
+                <div class="form-table--row">
+                    <label for="source">
+                        <strong><?php esc_html_e( 'Client Company', 'client-testimonials' ) ?></strong>
+                    </label>
+                    <input type="text" class="widefat" id="source" name="testimonial[source]"
+                           value="<?php echo esc_attr( $source ); ?>">
+                </div>
+                <div class="form-table--row">
+                    <label for="link">
+                        <strong><?php esc_html_e( 'Client Website', 'client-testimonials' ) ?></strong>
+                    </label>
+                    <input type="url" class="widefat" id="link" name="testimonial[link]"
+                           value="<?php echo esc_attr( $link ); ?>">
+                </div>
+            </div>
 			<?php
 		}
 	}
-
 }

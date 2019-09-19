@@ -109,7 +109,6 @@ class Client_Testimonials_REST_Controller extends WP_REST_Controller {
 	public function prepare_item_for_response( $testimonial, $request ) {
 		$fields = $request->get_param( 'fields' );
 		$post   = $testimonial->get_post();
-		$meta   = get_post_meta( $post->ID, '_testimonial', true );
 
 		// Base fields for every post.
 		$data = array( 'id' => $post->ID );
@@ -203,19 +202,19 @@ class Client_Testimonials_REST_Controller extends WP_REST_Controller {
 
 		return array_merge( $params, array(
 			'order'   => array(
-				'description' => __( 'Order sort attribute ascending or descending.' ),
+				'description' => __( 'Order sort attribute ascending or descending.', 'client-testimonials' ),
 				'type'        => 'string',
 				'default'     => 'desc',
 				'enum'        => array( 'asc', 'desc' ),
 			),
 			'orderby' => array(
-				'description' => __( 'Sort collection by object attribute.' ),
+				'description' => __( 'Sort collection by object attribute.', 'client-testimonials' ),
 				'type'        => 'string',
 				'default'     => 'date',
 				'enum'        => array( 'id', 'title', 'date', ),
 			),
 			'fields'  => array(
-				'description'       => __( 'List of fields to include in response. Available fields are ' ) . implode( ', ', $valid_fields ),
+				'description'       => __( 'List of fields to include in response. Available fields are ', 'client-testimonials' ) . implode( ', ', $valid_fields ),
 				'type'              => 'array',
 				'default'           => [
 					'id',

@@ -55,6 +55,9 @@ if ( ! class_exists( 'Client_Testimonials' ) ) {
 				add_action( 'plugin_loaded', [ self::$instance, 'init_classes' ] );
 
 				add_action( 'wp_enqueue_scripts', array( self::$instance, 'enqueue_scripts' ) );
+
+				// Load plugin textdomain
+				add_action( 'plugins_loaded', array( self::$instance, 'load_plugin_textdomain' ) );
 			}
 
 			return self::$instance;
@@ -132,6 +135,23 @@ if ( ! class_exists( 'Client_Testimonials' ) ) {
 			}
 
 			return $this->version;
+		}
+
+		/**
+		 * Load plugin textdomain
+		 */
+		public function load_plugin_textdomain() {
+			// Traditional WordPress plugin locale filter
+			$locale = apply_filters( 'plugin_locale', get_locale(), $this->plugin_name );
+			$mofile = sprintf( '%1$s-%2$s.mo', $this->plugin_name, $locale );
+
+			// Setup paths to current locale file
+			$mofile_global = WP_LANG_DIR . '/' . $this->plugin_name . '/' . $mofile;
+
+			// Look in global /wp-content/languages/dialog-contact-form folder
+			if ( file_exists( $mofile_global ) ) {
+				load_textdomain( $this->plugin_name, $mofile_global );
+			}
 		}
 	}
 }
