@@ -2,6 +2,7 @@
 Contributors: 		sayful
 Tags:  				client-testimonials, testimonials, widget
 Requires at least: 	5.0
+Requires PHP:       5.6
 Tested up to: 		5.2
 Stable tag: 		3.1.0
 License: 			GPLv2 or later
@@ -17,7 +18,7 @@ Testimonials is a WordPress plugin that allows you to manage and display testimo
 = Usage =
 
 After installing and activating "Client Testimonials", go to `Admin Dashboard -> Testimonials` and create testimonials like creating a post.
-You can add "Client's Name", "Business/Site Name", "Business/Site Link" and "Featured Image" for client avatar
+You can add "Client Name", "Client Company", "Client Website" and "Client Avatar"
 
 After creating testimonials, go to post or page where you want add testimonials and write following shortcode.
 `[client-testimonials]`
@@ -37,6 +38,9 @@ The shortcode can include following shortcode attribute.
 | `limit`       | `10`      | Maximum items can be show in a slider.                                    |
 
 * Attribute `tablet`, `desktop`, `widescreen` and `fullhd` can take maximum value 5.
+
+Example 1:
+`[client-testimonials theme='two' autoplay='yes' tablet='2' desktop='3']`
 
 
 = Widget Usage =
@@ -78,16 +82,16 @@ Do you have questions or issues with Client Testimonials? [Ask for support here]
 
 == Screenshots ==
 
-1. Client Testimonials Slide with one item
-2. Client Testimonials Slide with three items
-3. Client Testimonials Widget display
-4. Client Testimonials with Page Builder by SiteOrigin
-5. Client Testimonials TinyMce button
-6. Client Testimonials TinyMce button popup
+1. Client testimonials admin list page.
+2. Client testimonials admin edit page.
+3. Client testimonials frontend view with theme one and two columns.
+4. Client testimonials frontend view with theme one and one column.
+5. Client testimonials frontend view with theme two and two columns.
 
 == Changelog ==
 
-= version 3.1.0 - 2019-09-15 =
+= version 3.1.0 - 2019-09-19 =
+* Add two design theme (theme one & theme two)
 * Update core code.
 * Add testimonials REST endpoint.
 * Replace Owl carousel with Flickity carousel.
